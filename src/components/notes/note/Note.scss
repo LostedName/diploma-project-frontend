@@ -1,0 +1,27 @@
+.note {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  max-width: 450px;
+  min-width: 250px;
+  word-wrap: break-word;
+
+  .noteHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px 10px 0 0;
+    padding: 15px;
+    background: #d3d2d2;
+
+    .deleteIcon:hover {
+      cursor: pointer;
+    }
+  }
+
+  .noteContent {
+    border-radius: 0 0 10px 10px;
+    padding: 15px;
+    background: #efefef;
+  }
+}

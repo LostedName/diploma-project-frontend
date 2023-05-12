@@ -1,0 +1,44 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: absolute;
+  top: 70px;
+  left: 50px;
+  background: #ffffff;
+  border-radius: 0 0 10px 10px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: rgba(13, 35, 52, 0.24) 3.6px 3.6px 8.3px;
+
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .label {
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  & button {
+    background: #1f883d;
+    color: #ffffff;
+    align-self: center;
+    cursor: pointer;
+  }
+
+  & textarea {
+    height: 50px;
+    max-width: 300px;
+  }
+
+  .closeButton {
+    position: absolute;
+    top: 5px;
+    right: 9px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+}

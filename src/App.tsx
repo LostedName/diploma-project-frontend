@@ -1,26 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.scss";
+import { Notes } from "./components/notes/Notes";
+import { Route, Routes } from "react-router-dom";
+import { LoginForm } from "./components/login/LoginForm";
+import { ProfileSettings } from "./components/settings/profile/ProfileSettings";
+import { DevelopersSettings } from "./components/settings/developers/DevelopersSettings";
 
-function App() {
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <LoginForm
+              pageTitle="Вход"
+              buttonTitle="Войти"
+              navLinkRoute="/registration"
+              navLinkTitle="Зарегистрироваться"
+              navLinkDescription="Впервые у нас?"
+            />
+          }
+        />
+        <Route path="notes" element={<Notes />} />
+        <Route path="settings/profile" element={<ProfileSettings />} />
+        <Route path="settings/developers" element={<DevelopersSettings />} />
+        <Route
+          path="login"
+          element={
+            <LoginForm
+              pageTitle="Вход"
+              buttonTitle="Войти"
+              navLinkRoute="/registration"
+              navLinkTitle="Зарегистрироваться"
+              navLinkDescription="Впервые у нас?"
+            />
+          }
+        />
+        <Route
+          path="registration"
+          element={
+            <LoginForm
+              pageTitle="Регистрация"
+              buttonTitle="Зарегистрироваться"
+              navLinkRoute="/login"
+              navLinkTitle="Войти"
+              navLinkDescription="Есть аккаунт?"
+            />
+          }
+        />
+      </Routes>
     </div>
   );
-}
-
-export default App;
+};

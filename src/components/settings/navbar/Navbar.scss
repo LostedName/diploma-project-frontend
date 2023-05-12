@@ -1,0 +1,14 @@
+.navbar {
+  display: flex;
+  flex-direction: column;
+
+  span {
+    border-radius: 6px;
+    padding: 8px 6px;
+
+    &:hover {
+      background: #e7e7e7;
+      cursor: pointer;
+    }
+  }
+}

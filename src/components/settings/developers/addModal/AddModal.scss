@@ -1,0 +1,30 @@
+.modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 30px 40px;
+
+  .title {
+    font-size: 22px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e7e7e7;
+  }
+
+  .formBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .label {
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  & button {
+    background: #1f883d;
+    color: #ffffff;
+    align-self: center;
+    cursor: pointer;
+  }
+}

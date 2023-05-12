@@ -1,0 +1,43 @@
+.settingsWrapper {
+  display: flex;
+  gap: 120px;
+  margin-left: 280px;
+  max-width: 1100px;
+
+  .settings {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+
+    .title {
+      display: flex;
+      justify-content: space-between;
+      font-size: 24px;
+      padding: 10px 0;
+      border-bottom: 1px solid #e7e7e7;
+    }
+
+    .formBlock {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      .label {
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      & input {
+        max-width: 400px;
+      }
+    }
+
+    & button {
+      background: #1f883d;
+      color: #ffffff;
+      align-self: flex-start;
+      cursor: pointer;
+    }
+  }
+}

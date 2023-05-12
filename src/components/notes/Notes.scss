@@ -1,0 +1,13 @@
+.notes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.button {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 6px;
+  background: #d3d2d2;
+  border: 0;
+}
