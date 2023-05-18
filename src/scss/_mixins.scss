@@ -1,0 +1,142 @@
+@use 'variables' as *;
+@use 'colors' as *;
+
+@mixin base-main ($style: flex) {
+    width: 100%;
+    min-height: calc(100vh - 5rem - 3.75rem);
+    background-image: url("../../public/assets/crowBackground.png");
+    background-size: 50%;
+    @if ($style == flex) {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    @if ($style == grid) {
+        display: grid;
+        grid-template-columns: 30% 40% 30%;
+        @media screen and (max-width: 40rem) {
+          grid-template-columns: 15% 70% 15%;
+        }
+    }
+}
+@mixin base-main-admin($withHeader: "true", $style: flex) {
+  @include base-main($style);
+  @if ($withHeader == "true") {
+    background-image: none;
+    min-height: calc(100vh - 5rem);
+  }
+  @else {
+    min-height: calc(100vh);
+  }
+}
+@mixin display-flex($flex-dir: row, $justify-content: normal, $align-items: normal) {
+  display: flex;
+  flex-direction: $flex-dir;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+@mixin link-style {
+    color: #0a66c2;
+    font-size: 1.1rem;
+    text-decoration: none;
+    &:hover{
+      color: #09539e;
+      text-decoration: #09539e solid underline;
+    }
+    &:focus{
+      color: #09539e;
+      text-decoration: #09539e solid underline;
+    }
+}
+@mixin shadow {
+  box-shadow: 0 0 .5rem .2rem rgba(0, 0, 0, 0.171);
+}
+@mixin base-form($width){
+    @include display-flex(column, flex-start);
+    width: $width;
+    border-radius: .5rem;
+    @include shadow;
+    padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+    background-color: #fff;
+}
+
+@mixin form-btn{
+    height: 3rem;
+    border-radius: 3rem;
+    border: none;
+    color: #fff;
+    font-size: 1.1rem;
+    background-color: #0a66c2;
+    transition: all .1s ease;
+    &:hover{
+      background-color: #08529c;
+    }
+    &:focus-visible{
+      outline: 2px solid #3a90e6;
+    }
+}
+@mixin page-content-header {
+  @include display-flex($align-items: center);
+  padding-left: 1.2rem; 
+  width: 100%;
+  height: 3rem;
+  border-bottom: $border;
+}
+
+@mixin avatar_image {
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  border: $border;
+}
+@mixin dot_sign($width: .3rem) {
+  width: $width;
+  height: $width;
+  border-radius: 50%;
+  background-color: $gray-color;
+}
+@mixin dot_sign_btn {
+  @include display-flex(row, flex-start, center);
+  border: none;
+  background: transparent;
+  padding: .3rem 0;
+  cursor: pointer;
+  div {
+    margin-right: .2rem;
+    width: .3rem;
+    height: .3rem;
+    border-radius: 50%;
+    background-color: lighten($gray-color, 20);
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  &:focus-visible{
+    outline: 2px solid #3a90e6;
+  }
+}
+
+@mixin overlay_menu($width: 9rem) {
+  @include display-flex(column, flex-start, flex-start);
+  visibility: collapse;
+  position: absolute;
+  top: 1rem;
+  right: 0;
+  width: $width;
+  height: auto;
+  padding: .3rem .5rem;
+  background-color: #fff;
+  border: $border;
+  border-radius: 0;
+  &.active {
+    visibility:visible;
+  }
+  button {
+    background-color: transparent;
+    border: none;
+    font-size: 1.1rem;
+    &:focus-visible {
+      outline: 2px solid #3a90e6;
+    }      
+  }
+}

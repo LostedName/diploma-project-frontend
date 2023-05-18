@@ -1,0 +1,37 @@
+.circle-loader-component {
+  position: relative;
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+  border-top: 4px solid #009688;
+  border-right: 4px solid transparent;
+  animation: 1s spin linear infinite;
+  .first-line {
+    position: absolute;
+    top: .5rem;
+    left: .5rem;
+    height: 3rem;
+    width: 3rem;
+    border-radius: 50%;
+    background: transparent;
+    border-top: 4px solid #009688;
+    border-left: 4px solid transparent;
+    animation: .5s spin-reverse linear infinite;  
+  }
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes spin-reverse {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+}

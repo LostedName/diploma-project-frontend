@@ -1,0 +1,49 @@
+%active-label{
+    font-size: 1rem;
+    top: .1rem;
+    left: .50rem;
+}
+
+.container{
+    position: relative;
+    border: 1px solid black;
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: .3rem;
+    &.not_filled {
+      border: 1px solid rgb(215, 39, 39);
+    }
+    &:focus-within {
+      border: 1px solid rgba(104, 40, 206, 0.514);
+      outline: 2px solid rgba(104, 40, 206, 0.514);
+      label {
+        @extend %active-label;
+      }
+    }
+    label {
+      position: absolute;
+      pointer-events: none;
+      color: rgba(0, 0, 0, 0.699);
+      padding: .1rem;
+      font-size: 1.2rem;
+      top: .65rem;
+      left: .55rem;
+      transition: all .1s ease;
+      &.active {
+        @extend %active-label;
+      }
+      &.not_filled {        
+        color: rgba(237, 31, 31, 0.699);
+      }
+    }
+    input {
+      width: 100%;
+      color: #000;
+      font-size: 1.3rem;
+      line-height: 1.2;
+      padding: 1.2rem .3rem .3rem .65rem;
+      border: none;
+      background-color: transparent;
+      outline: none;
+    }
+  }

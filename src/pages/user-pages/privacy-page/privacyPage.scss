@@ -1,0 +1,5 @@
+@use '../../../scss' as *;
+
+main.notfound_page{
+  @include base-main;
+}

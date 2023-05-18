@@ -1,0 +1,132 @@
+@use '../../../scss' as *;
+
+main.main_page{
+  @include base-main(grid);
+  .content {
+    background: #fff;
+    .circle-loader {
+      @include display-flex(row, center, flex-start);
+      width: 100%;
+      height: 15rem;
+      font-size: 1.3rem;
+      padding: 3rem 0;
+    }
+    .content_header {
+      @include page-content-header;
+      span {
+        font-size: 1.1rem;
+        padding-bottom:.10rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+    }
+    @include display-flex(column, flex-start, center);
+    width: 100%;
+    height: 100%;
+    border-left: $border;
+    border-right: $border;
+    .feed_sections {
+      display: grid;
+      width: 100%;
+      height: 3rem;
+      grid-template-columns: 1fr 1fr;
+      justify-items: center;
+      border-bottom: $border;
+      button {
+        font-size: 1.25rem;
+        width: 6.5rem;
+        border: none;
+        position: relative;
+        background-color: transparent;
+        cursor: pointer;
+        &:focus-visible{
+          outline: 2px solid #3a90e6;
+        }
+        &.active {
+          &::before {
+            content: "";
+            position: absolute;
+            height: .3rem;
+            width: 100%;
+            border-radius: 1.25rem;
+            left: 0;
+            transition: all .3s ease;
+            bottom: 0;
+            background-color: #88C1F5;
+          }
+        }
+        &::before {
+          content: "";
+          position: absolute;
+          height: .3rem;
+          width: 100%;
+          border-radius: 1.25rem;
+          left: 0;
+          bottom: 0;
+          background-color: transparent;
+        }
+      }
+    }
+    .add_new_post {
+      &.active{
+        display: grid;
+      }
+      display: none;
+      width: 100%;
+      grid-template-columns: 12% 1fr;
+      grid-template-rows: 1fr 2.5rem;
+      border-bottom: $border;
+      padding: 1rem;
+      &>img {
+        @include avatar_image;
+        width: 80%;
+        grid-column: 1/2;
+        grid-row: 1/2;
+        justify-self: center;
+        margin-bottom: 1rem;
+      }
+      textarea {
+        grid-column: 2/3;
+        grid-row: 1/2;
+        width: 100%;
+        resize: none;
+        border: none;
+        outline: none;
+        padding: .2rem;
+        &:focus {
+          outline: none;
+        }
+        &:focus-visible{
+          outline: 2px solid #3a90e6;
+        }
+      }
+      div {
+        @include display-flex(row, flex-end, center);
+        padding-top: 1rem;
+        width: 100%;
+        grid-row: 2/3;
+        grid-column: 1/3;
+        border-top: $border;
+        button {
+          @include display-flex(row, center, center);
+          border-radius: 2.5rem;
+          height: 2.5rem;
+          width: 6rem;
+          font-size: 1.2rem;
+          margin-left: 1.3rem;
+          transition: all .1s ease;
+          color: #fff;
+          cursor: pointer;
+          border: none;
+          background: linear-gradient(180deg, rgba(178, 142, 252, .8) 10%, rgba(65, 93, 239, .8));
+          &:hover {
+            background: linear-gradient(180deg, rgba(178, 142, 252, .9) 10%, rgba(65, 93, 239, .9));
+          }
+          &:focus-visible {
+            outline: 2px solid rgba(104, 40, 206, 0.514);
+          }
+        }
+      }
+    }
+  }
+}

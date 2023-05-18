@@ -1,0 +1,11 @@
+@use '../../../scss' as *;
+
+main.notfound_page{
+  @include base-main;
+  div {
+    @include base-form(20rem);
+    a {
+      @include link-style;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+@use '../../../scss' as *;
+
+main.admin_notfound_page{
+  @include base-main-admin("true");
+  div {
+    @include base-form(20rem);
+    a {
+      @include link-style;
+    }
+  }
+}

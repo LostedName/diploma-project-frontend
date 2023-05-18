@@ -1,0 +1,20 @@
+@use '../../../scss' as *;
+
+main.ban_page {
+  @include base-main;
+  .ban_form {
+    @include base-form(25rem);
+  }
+  .bottom-phrase{
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+    background-color: #fff;
+    @include shadow;
+    border-radius: 1rem;
+    padding: .5rem 1rem;
+    a{
+      @include link-style;
+      margin-left: .1rem;
+    }
+  }
+}

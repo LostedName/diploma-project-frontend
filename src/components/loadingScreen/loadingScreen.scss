@@ -1,0 +1,28 @@
+@use '../../scss' as *;
+
+.loading-screen-container {
+  @include display-flex(row, center, center);
+  width: 100%;
+  height: 100%;
+  .loading-screen-bg {
+    width: 100%;
+    height: 100%;
+    background-image: url("../../../public/assets/crowBackground.png");
+    background-size: 50%;
+    opacity: .5;
+  }
+  .loading-crow {
+    position: absolute;
+    @include display-flex(row, center, center);
+    background: #fff;
+    width: 10rem;
+    height: 10rem;
+    opacity: 1;
+    border-radius: 50%;
+    border: 2px solid rgb(60, 60, 60);
+    img {
+      height: 3.5rem;
+      width: 3.5rem;
+    }
+  }
+}
