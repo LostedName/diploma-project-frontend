@@ -3,13 +3,11 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import UserApp from './UserApp';
-import AdminApp from './AdminApp';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import UserApp from './UserApp';
 
 const Application = () => {
-  const subdomain = window.location.host.split(".")[0];
   return (
   <React.StrictMode>
     <Provider store={store}>
@@ -21,12 +19,8 @@ const Application = () => {
         hideProgressBar={false}
         pauseOnHover
       />
-      <BrowserRouter>
-        {
-        subdomain === "admin" 
-        ? <AdminApp />
-        : <UserApp />
-        }
+      <BrowserRouter>        
+        <UserApp />
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

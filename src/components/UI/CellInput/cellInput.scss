@@ -1,0 +1,26 @@
+#cells_container{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  & input {
+    width: 3.5rem;
+    height: 4rem;
+    border-radius: .25rem;
+    border: .1rem solid #cdcdcd;
+    &.border-error {
+      border-color: #D64747;
+      color: #460a0a;
+    }
+    &:hover {
+      border: .1rem solid #0AB5A2;
+    }
+    &:focus {
+      outline: none;
+    }
+    &:focus-visible {
+      outline: .2rem solid #0AB5A2;
+    }
+    text-align: center;
+    font-size: 2rem;
+  }
+}

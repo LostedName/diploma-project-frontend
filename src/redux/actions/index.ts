@@ -1,10 +1,8 @@
 import * as userActions from './user';
-import * as adminActions from './admin';
-import * as postsAction from './post';
+import * as noteActions from './note';
 
 const actions = {
   ...userActions,
-  ...adminActions,
-  ...postsAction,
+  ...noteActions,
 };
 export default actions;

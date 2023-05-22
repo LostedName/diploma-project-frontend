@@ -1,0 +1,28 @@
+@use '../../../../scss' as *;
+
+main.register_page{
+  @include base-main;
+  .reg_form {
+    @include base-form(25rem);
+    h1 {
+      font-size: 2rem;
+      margin-bottom: .7rem;
+    }
+
+    button {
+      @include form-btn;
+    }
+  }
+  .bottom-phrase{
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+    background-color: #fff;
+    @include shadow;
+    border-radius: 1rem;
+    padding: .5rem 1rem;
+    a{
+      @include link-style;
+      margin-left: .1rem;
+    }
+  }
+}

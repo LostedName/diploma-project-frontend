@@ -1,0 +1,43 @@
+@use '../../../scss' as *;
+
+main.forgot_pass_page {
+  @include base-main;
+  .forgot_pass_form {
+    @include base-form(26rem);
+    h1 {
+      font-size: 2rem;
+      margin-bottom: .7rem;
+      margin-top: 1rem;
+    }
+    span.phrase {
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      color:rgb(103 109 133);
+      letter-spacing: 0.15px; 
+    }
+    a {
+      @include link-style;
+      margin-bottom: .6rem;
+    }
+    .container:last-of-type{
+      margin-bottom: .6rem;
+    }
+    button {
+      @include form-btn;
+      margin-top: .5rem;
+    }
+  }
+  .bottom-phrase{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    font-size: 1.3rem;
+    border-radius: 1rem;
+    padding-top: 2rem;
+    a{
+      @include link-style;
+      font-size: 1.3rem;
+      margin-left: .5rem;
+    }
+  }
+}

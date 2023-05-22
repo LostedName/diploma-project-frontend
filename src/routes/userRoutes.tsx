@@ -1,51 +1,15 @@
-import { AboutPage, FollowsPage, LoginPage, MainPage, MustLoginPage, NotFoundPage, PrivacyPage, ProfilePage, RegisterPage, SearchPage, SettingsPage, SubscribersPage, TermsPage, UserProfilePage } from "../pages/user-pages";
-import BanPage from "../pages/user-pages/ban-page/BanPage";
+import { AboutPage, ForgotPassPage, HomePage, LoginPage, PrivacyPage, RedirectPage, RegisterPage, SignUpCheckEmailPage, SignUpConfirmationErrorPage, SignUpConfirmedPage, TermsPage, TwoFactorAuthPage } from "../pages/user-pages";
+import SignUpConfirmPage from "../pages/user-pages/sign-up-pages/sign-up-confirm-page/SignUpConfirmPage";
 import { ElementRoutes } from "../types/routes";
 
-const loggedRoutes: ElementRoutes = [
-    {
-        path:"/profile",
-        element: ProfilePage, 
-    },
-    {
-        path:"/profile/:userId",
-        element: UserProfilePage,
-    },
-    {
-        path:"/follows",
-        element: FollowsPage, 
-    },
-    {
-        path:"/subscribers",
-        element: SubscribersPage, 
-    },
-    {
-        path:"/settings",
-        element: SettingsPage, 
-    },
-];
-const bannedRoutes: ElementRoutes = [
-    {
-        path:"/profile",
-        element: BanPage, 
-    },
-    {
-        path:"/profile/:userId",
-        element: BanPage,
-    },
-    {
-        path:"/follows",
-        element: BanPage, 
-    },
-    {
-        path:"/subscribers",
-        element: BanPage, 
-    },
-    {
-        path:"/settings",
-        element: BanPage, 
-    },
-];
+const RedirectToLogin: React.FC = () => {
+    return <RedirectPage redirectPath="/login"/>;
+} 
+
+const RedirectToHome: React.FC = () => {
+    return <RedirectPage redirectPath="/home"/>;
+} 
+
 const unloggedRoutes: ElementRoutes = [
     {
         path:"/registration",
@@ -56,26 +20,55 @@ const unloggedRoutes: ElementRoutes = [
         element: LoginPage,
     },
     {
+        path:"/two-factor-auth",
+        element: TwoFactorAuthPage,
+    },
+    {
+        path:"/sign-up-check-email",
+        element: SignUpCheckEmailPage,
+    },
+    {
+        path:"/confirm",
+        element: SignUpConfirmPage,
+    },
+    {
+        path:"/recovering-password",
+        element: ForgotPassPage,
+    },
+    {
+        path:"/signup-confirmed",
+        element: SignUpConfirmedPage,
+    },
+    {
+        path:"/signup-confirmation-error",
+        element: SignUpConfirmationErrorPage,
+    },
+    {
+        path:"/*",
+        element: RedirectToLogin, 
+    },
+
+];
+
+const loggedRoutes: ElementRoutes = [
+    {
+        path:"/home",
+        element: HomePage, 
+    },
+    {
         path:"/profile",
-        element: MustLoginPage, 
-    },
-    {
-        path:"/profile/:userId",
-        element: MustLoginPage, 
-    },
-    {
-        path:"/follows",
-        element: MustLoginPage,
-    },
-    {
-        path:"/subscribers",
-        element: MustLoginPage, 
+        element: HomePage, 
     },
     {
         path:"/settings",
-        element: MustLoginPage,
+        element: HomePage, 
+    },
+    {
+        path:"/*",
+        element: RedirectToHome, 
     },
 ];
+
 const defaultRoutes: ElementRoutes = [
     {
         path:"/about",
@@ -90,17 +83,9 @@ const defaultRoutes: ElementRoutes = [
         element: TermsPage, 
     },
     {
-        path:"/search",
-        element: SearchPage,
-    },
-    {
-        path:"/",
-        element: MainPage, 
-    },
-    {
         path:"/*",
-        element: NotFoundPage, 
+        element: RedirectToLogin, 
     },
 ];
 
-export {defaultRoutes, unloggedRoutes, loggedRoutes, bannedRoutes};
+export {defaultRoutes, unloggedRoutes, loggedRoutes};

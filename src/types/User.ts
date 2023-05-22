@@ -1,31 +1,64 @@
 export enum UserActionTypes {
+    SET_AUTHORIZATION="SET_AUTHORIZATION",
+    SET_RESEND_VERIFY_SIGN_UP_AVAILABLE="SET_RESEND_VERIFY_SIGN_UP_AVAILABLE",
+    SET_SIGN_UP_CONFIRMED_AVAILABLE="SET_SIGN_UP_CONFIRMED_AVAILABLE",
+    SET_SIGN_UP_CONFIRMATION_ERROR_AVAILABLE="SET_SIGN_UP_CONFIRMATION_ERROR_AVAILABLE",
+    SET_TWO_FACTOR_AUTH_AVAILABLE="SET_TWO_FACTOR_AUTH_AVAILABLE",
+    SET_VERIFY_SIGN_UP_AVAILABLE="SET_VERIFY_SIGN_UP_AVAILABLE",
+    SET_VERIFY_SIGN_UP_ERROR="SET_SIGN_UP_ERROR",
+    SET_RESET_PASSWORD_ERROR="SET_RESET_PASSWORD_ERROR",
+
     SET_USER_DATA="SET_USER_DATA",
-    SET_FOREIGN_USER_DATA="SET_FOREIGN_USER_DATA",
     LOGOUT_USER="LOGOUT_USER",
     SET_APP_LOADING="SET_APP_LOADING",
-    SET_FOREIGN_USER_LOADING="SET_FOREIGN_USER_LOADING",
-    SET_USER_ERROR="SET_USER_ERROR",
-    SET_IS_FOLLOWED="SET_IS_FOLLOWED",
-    SET_USER_FOLLOWS="SET_USER_FOLLOWS",
-    SET_IS_FOLLOWED_ON_SUBS="SET_IS_FOLLOWED_ON_SUBS"
+    SET_USER_ERROR="SET_USER_ERROR"
 }
+
+export interface SetResetPasswordErrorAction {
+    type: UserActionTypes.SET_RESET_PASSWORD_ERROR;
+    payload: boolean;
+}
+
+export interface SetVerifySignUpErrorAction {
+    type: UserActionTypes.SET_VERIFY_SIGN_UP_ERROR;
+    payload: boolean;
+}
+
+export interface SetAuthorizationErrorAction {
+    type: UserActionTypes.SET_AUTHORIZATION;
+    payload: boolean;
+}
+
+export interface SetResendVerifySignUpAvailableAction {
+    type: UserActionTypes.SET_RESEND_VERIFY_SIGN_UP_AVAILABLE;
+    payload: boolean;
+}
+
+export interface SetVerifySignUpAvailableAction {
+    type: UserActionTypes.SET_VERIFY_SIGN_UP_AVAILABLE;
+    payload: boolean;
+}
+
+export interface SetSignUpConfirmedAvailableAction {
+    type: UserActionTypes.SET_SIGN_UP_CONFIRMED_AVAILABLE;
+    payload: boolean;
+}
+export interface SetSignUpConfirmationErrorAvailableAction {
+    type: UserActionTypes.SET_SIGN_UP_CONFIRMATION_ERROR_AVAILABLE;
+    payload: boolean;
+}
+export interface SetTwoFactorAuthAvailableAvailableAction {
+    type: UserActionTypes.SET_TWO_FACTOR_AUTH_AVAILABLE;
+    payload: boolean;
+}
+
+
 
 export interface SetUserDataAction {
     type: UserActionTypes.SET_USER_DATA;
     payload: UserType;
 }
-export interface SetForeignUserDataAction {
-    type: UserActionTypes.SET_FOREIGN_USER_DATA;
-    payload: ForeignUserType;
-}
-export interface SetIsFollowedAction {
-    type: UserActionTypes.SET_IS_FOLLOWED;
-    payload: boolean;
-}
-export interface SetIsFollowedOnSubsAction {
-    type: UserActionTypes.SET_IS_FOLLOWED_ON_SUBS;
-    payload: { isFollowed: boolean, userId: number };
-}
+
 export interface LogoutUserAction {
     type: UserActionTypes.LOGOUT_USER;
 }
@@ -34,84 +67,56 @@ export interface AppLoadingAction {
     type: UserActionTypes.SET_APP_LOADING,
     payload: boolean,
 }
-export interface ForeignUserLoadingAction {
-    type: UserActionTypes.SET_FOREIGN_USER_LOADING,
-    payload: boolean,
-}
-export interface SetUserFollowAction {
-    type: UserActionTypes.SET_USER_FOLLOWS,
-    payload: FollowType[],
-}
 export interface SetUserErrorAction {
     type: UserActionTypes.SET_USER_ERROR,
     payload: string,
 }
 
-export type UserAction = SetUserDataAction |
+export type UserAction = SetResetPasswordErrorAction |
+                        SetVerifySignUpErrorAction |
+                        SetAuthorizationErrorAction |
+                        SetResendVerifySignUpAvailableAction |
+                        SetVerifySignUpAvailableAction |
+                        SetSignUpConfirmedAvailableAction |
+                        SetSignUpConfirmationErrorAvailableAction |
+                        SetTwoFactorAuthAvailableAvailableAction |
+                        SetUserDataAction |
                         LogoutUserAction | 
                         AppLoadingAction | 
-                        ForeignUserLoadingAction |
-                        SetForeignUserDataAction |
-                        SetUserErrorAction |
-                        SetIsFollowedAction |
-                        SetIsFollowedOnSubsAction |
-                        SetUserFollowAction;
+                        SetUserErrorAction;
 
 export interface UserType {
     id: number,
-    avatar?: string,
-    profileCover?: string,
     email: string,
-    name: string,
-    description: string,
-    country?: string,
-    link?: string,
-    followCount?: number,
-    subsCount?: number,
-    birthDate?: string,
-    createdAt?: string,
-    isBanned?: boolean,
+    avatarUrl?: string,
+    firstname: string,
+    lastname: string,
+    createdAt: string,
 }
 
 export interface EditProfileType {
-    name: string,
-    description: string | null,
-    country: string | null,
-    link: string | null,
-    birthDate: string | null,
-    avatar: string | null,
-    profileCover: string | null
-  }
-
-export interface ForeignUserType {
-  isFollowed?: boolean,
-  followCount?: number,
-  subsCount?: number,
-  id: number,
-  avatar?: string,
-  profileCover?: string,
-  email: string,
-  name: string,
-  description: string,
-  country?: string,
-  link?: string,
-  birthDate?: string,
-  createdAt?: string,
+    firstname: string,
+    lastname: string,
+    avatarUrl: string | null,
 }
 
-export interface FollowType {
-  userId: number,
-  avatar: string,
-  name: string,
-  isFollowed: boolean,
-};
+export interface UserErrorsType {
+    resetPassword: boolean,
+    confirmSignUp: boolean,
+}
+
+export interface UserStates {
+    isResendConfirmEmailAvailable: boolean;
+    isSignUpConfirmedAvailable: boolean;
+    isSignUpConfirmationErrorAvailable: boolean;
+    isTwoFactorAuthAvailable: boolean;
+    isVerifySignUpAvailable: boolean; //???
+}
 
 export interface UserState {
-    isAppLoading: boolean;
     isAuth: boolean;
+    isAppLoading: boolean;
     user: UserType | null;
-    userSubs: FollowType[];
-    isPageLoading: boolean;
-    foreignUser: ForeignUserType | null;
-    userError: string;
+    states: UserStates;
+    errors: UserErrorsType;
 }

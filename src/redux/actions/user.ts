@@ -1,34 +1,38 @@
+import { TokenType, setToken, getToken, checkExpirationDate, deleteToken } from './../../services/jwt';
 import axios from 'axios';
 import { NavigateFunction } from 'react-router-dom';
-import errorCoverage, { refreshTokenCoverage } from '../../error';
-import { internalErrorAction, loginBadRequestAction, loginEmptyFieldsAction, loginNotFoundAction, refreshBadTokenAction, reportAlreadyExistAction, userAlreadyExistAction } from '../../error/actions/user';
-import statusCodes from '../../error/statusCodes';
-import statuses from '../../error/errorStatuses';
-import { deleteAccessToken, deleteRefreshToken, getRefreshToken, setAccessToken, setRefreshToken } from '../../services/jwt';
 import { Notify } from '../../services/toast';
 import { userService } from '../../services/user';
 import { AppThunk } from '../store';
-import { EditProfileType, FollowType, ForeignUserType, UserActionTypes, UserType } from './../../types/User';
-import { postService } from '../../services/post';
+import { EditProfileType, UserActionTypes, UserType } from './../../types/User';
+
+export const setUserAuthorization = (payload: boolean) => ({
+  type: UserActionTypes.SET_AUTHORIZATION,
+  payload, 
+});
+
+export const setResendVerifySignUpAvailableAction = (payload: boolean) => ({
+  type: UserActionTypes.SET_RESEND_VERIFY_SIGN_UP_AVAILABLE,
+  payload, 
+});
+
+export const setSignUpConfirmedAvailableAction = (payload: boolean) => ({
+  type: UserActionTypes.SET_SIGN_UP_CONFIRMED_AVAILABLE,
+  payload, 
+});
+export const setSignUpConfirmationErrorAvailableAction = (payload: boolean) => ({
+  type: UserActionTypes.SET_SIGN_UP_CONFIRMATION_ERROR_AVAILABLE,
+  payload, 
+});
+
+export const setTwoFactorAuthAvailableAction = (payload: boolean) => ({
+  type: UserActionTypes.SET_TWO_FACTOR_AUTH_AVAILABLE,
+  payload, 
+});
 
 export const setUserData = (payload: UserType) => ({
   type: UserActionTypes.SET_USER_DATA,
   payload, 
-});
-export const setForeignUserData = (payload: ForeignUserType) => ({
-  type: UserActionTypes.SET_FOREIGN_USER_DATA,
-  payload, 
-});
-export const setIsFollowed = (payload: boolean) => ({
-  type: UserActionTypes.SET_IS_FOLLOWED,
-  payload, 
-});
-export const setIsFollowedOnSubs = (isFollowed: boolean, userId: number) => ({
-  type: UserActionTypes.SET_IS_FOLLOWED_ON_SUBS,
-  payload: {
-    isFollowed,
-    userId,
-  }, 
 });
 export const setUserError = (payload: string) => ({
   type: UserActionTypes.SET_USER_ERROR,
@@ -41,223 +45,172 @@ export const setAppLoading = (payload: boolean) => ({
   type: UserActionTypes.SET_APP_LOADING,
   payload,
 });
-export const setForeignUserLoading = (payload: boolean) => ({
-  type: UserActionTypes.SET_FOREIGN_USER_LOADING,
-  payload,
-});
-export const setUserFollows = (payload: FollowType[]) => ({
-  type: UserActionTypes.SET_USER_FOLLOWS,
-  payload,
-});
 
-export const loginUserAsync = (email: string, password: string, navigate: NavigateFunction): AppThunk<void> => async dispatch => {
+export const userAutenticationAsync = (email: string, password: string, navigate: NavigateFunction, errorCallback: () => void): AppThunk<void> => async dispatch => {
   try {
-    const {data, status} = await userService.loginUser(email, password);
+    const {data, status} = await userService.userAutentication(email, password);
     if (status.toString()[0] === "2") {
-        const {user, accessToken, refreshToken} = data;
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
-        Notify.success("Вы успешно авторизованы!");
-        dispatch(setUserData(user));
-      navigate('/');
+        const {token, verified} = data;
+        if (token && verified) {
+          setToken(token, TokenType.TwoFactorAuth);
+          //go to 2f-auth screen
+          dispatch(setTwoFactorAuthAvailableAction(true));
+          navigate('/two-factor-auth');
+          return;
+        } else {
+          //go to sign-up check email
+          dispatch(setResendVerifySignUpAvailableAction(true));
+          navigate(`/sign-up-check-email?email=${email}`);
+          return;
+        }
     }
   } catch(err) {
-    errorCoverage(err, [loginNotFoundAction, loginBadRequestAction, loginEmptyFieldsAction, internalErrorAction]);
+    errorCallback();
   }
 }
-export const registerUserAsync = (email: string, name: string, password: string, navigate: NavigateFunction): AppThunk<void> => async dispatch => {
+
+export const registerUserAsync = (email: string, firstname: string, lastname: string, password: string, navigate: NavigateFunction): AppThunk<void> => async dispatch => {
   try {
-    const {data, status} = await userService.registerUser(email, name, password);
+    const {status} = await userService.userRegistration(email, firstname, lastname, password);
     if (status.toString()[0] === "2") {
-        const {user, accessToken, refreshToken} = data;
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
-        Notify.success("Вы успешно зарегистрированы!");
-        dispatch(setUserData(user));
-        navigate('/');
+        dispatch(setResendVerifySignUpAvailableAction(true));
+        navigate(`/sign-up-check-email?email=${email}`);
+      }
+  } catch(error) {
+    if (axios.isAxiosError(error)) {
+      const status: number = error.response?.status || 0;
+      const data = error.response?.data;
+      console.log("ERROR DATA:", data);
+    } else {
+      Notify.error("Что-то пошло не так, попробуйте позже.");
+    }
+  }
+}
+
+export const userResendRegistrationVerifyLinkAsync = (email: string, navigate: NavigateFunction): AppThunk<void> => async dispatch => {
+  try {
+    const {data, status} = await userService.userResendRegistrationVerifyLink(email);
+    if (status.toString()[0] === "2") {
+        Notify.success("Письмо было повторно отправлено вам на почту.");
       }
   } catch(err) {
-    errorCoverage(err, [userAlreadyExistAction, loginEmptyFieldsAction, internalErrorAction]);
+    
   }
 }
+
+export const userConfirmRegistrationAsync = (token: string, navigate: NavigateFunction): AppThunk<void> => async dispatch => {
+  try {
+    const {status} = await userService.userRegistrationConfirm(token);
+    if (status.toString()[0] === "2") {
+        dispatch(setSignUpConfirmedAvailableAction(true));
+        navigate("/signup-confirmed");
+      }
+  } catch(err) {
+    console.log("VERIFY ERROR");
+    dispatch(setSignUpConfirmationErrorAvailableAction(true));
+    navigate("/signup-confirmation-error");
+  }
+}
+
+export const userResendTwoFactorAuthCodeAsync = (navigate: NavigateFunction): AppThunk<void> => async dispatch => {
+  try {
+    const {status} = await userService.userResendTwoFactorAuthCode();
+    if (status.toString()[0] === "2") {
+      Notify.success('Новый код был успешно отправлен.');
+    }
+  } catch(err) {
+    Notify.success('Произошла ошибка, попробуйте войти ещё раз.');
+    navigate("/login");
+  }
+}
+
+export const userConfirmTwoFactorAuthCodeAsync = (code: string, setError: React.Dispatch<React.SetStateAction<string>>, navigate: NavigateFunction): AppThunk<void> => async dispatch => {
+  try {
+    console.log("CONFIRMATION REQUEST");
+    const {data, status} = await userService.userConfirmTwoFactorAuthCode(code);
+    if (status.toString()[0] === "2") {
+      Notify.success('Вы успешно вошли, добро пожаловать!');
+      setToken(data.token, TokenType.Access);
+      deleteToken(TokenType.TwoFactorAuth);
+      dispatch(getUserDataAsync());
+      dispatch(setUserAuthorization(true));
+      navigate('/home');
+    }
+  } catch(err) {
+    if (axios.isAxiosError(err)) {
+      const status: number = err.response?.status || 0;
+      const description = err.response?.data.error.description;
+      const errorCode = err.response?.data.error.code;
+      console.log("ERROR DATA:", err.response?.data, errorCode, description);
+      if (errorCode === 1001013) {
+        setError("Неправильный код, попробуйте ещё раз");
+      } else {
+        deleteToken(TokenType.TwoFactorAuth);
+        Notify.error("Время сессии вышло, повторите вход.");
+      }
+    } else {
+      Notify.error("Что-то пошло не так, попробуйте позже.");
+    }
+  }
+}
+
 export const getUserDataAsync = (): AppThunk<void> => async dispatch => {
   try {
-    const {data} = await userService.getUserData();
-    const fixedData = {
-      ...data,
-      followCount: parseInt(data.followCount),
-      subsCount: parseInt(data.subsCount), 
-    };
-    dispatch(setUserData(fixedData));
-  } catch (err) {
-    await refreshTokenCoverage(err, dispatch, true);
-    errorCoverage(err, [
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
-  }
-}
-export const getUserFollowsAsync = (userId: number): AppThunk<void> => async dispatch => {
-  try {
-    await dispatch(setUserError(""));
-    await dispatch(setForeignUserLoading(true));
-    const {data} = await userService.getUserSubscripitions(userId);
-    const fixedData = data.map((follow: any) => ({
-      ...follow,
-      isFollowed: follow.isFollowed === "1" ? true : false,
-    }));
-    await dispatch(setUserFollows(fixedData));
-    await dispatch(setForeignUserLoading(false));
-  } catch (err) {
-    await refreshTokenCoverage(err, dispatch);
-    errorCoverage(err, [
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
-    dispatch(setForeignUserLoading(false));
-  }
-}
-export const getUserSubscribersAsync = (userId: number): AppThunk<void> => async dispatch => {
-  try {
-    await dispatch(setUserError(""));
-    await dispatch(setForeignUserLoading(true));
-    const {data} = await userService.getUserSubscribers(userId);
-    const fixedData = data.map((follow: any) => ({
-      ...follow,
-      isFollowed: follow.isFollowed === "1" ? true : false,
-    }));
-    await dispatch(setUserFollows(fixedData));
-    await dispatch(setForeignUserLoading(false));
-  } catch (err) {
-    await refreshTokenCoverage(err, dispatch);
-    errorCoverage(err, [
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
-    dispatch(setForeignUserLoading(false));
-  }
-}
-export const getForeignUserDataAsync = (userId: number, navigate: NavigateFunction): AppThunk<void> => async dispatch => {
-  try {
-    await dispatch(setUserError(""));
-    await dispatch(setForeignUserLoading(true));
-    const {data} = await userService.getForeignUserData(userId);
-    const fixedData = {
-      ...data,
-      isFollowed: data.isFollowed === "1" ? true : false,
-      followCount: parseInt(data.followCount),
-      subsCount: parseInt(data.subsCount), 
-    };
-    await dispatch(setForeignUserData(fixedData));
-    await dispatch(setForeignUserLoading(false));
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      if (err.response?.status === statuses.badRequest && err.response?.data === statusCodes.CANT_GET_YOURSELF) {
-        navigate("/profile");
-      }
-      if (err.response?.status === statuses.notFound && err.response.data === statusCodes.USER_NOT_FOUND) {
-        dispatch(setUserError(statusCodes.USER_NOT_FOUND));
-      }
+    const {data, status} = await userService.getUserData();
+    if (status.toString()[0] === "2") {
+      const {
+        id,
+        account,
+        avatar_url,
+        first_name,
+        last_name,
+        created_at,
+      } = data;
+      const userData: UserType = {
+        id,
+        email: account.email,
+        firstname: first_name,
+        lastname:last_name,
+        avatarUrl: avatar_url,
+        createdAt: created_at, 
+      };
+      dispatch(setUserData(userData));
     }
-    await refreshTokenCoverage(err, dispatch);
-    errorCoverage(err, [
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
-    dispatch(setForeignUserLoading(false));
-  }
-}
-export const subscribeToUser = (userId: number): AppThunk<void> => async dispatch => {
-  try {
-    await userService.subscribeUser(userId);
-    dispatch(setIsFollowed(true));
   } catch (err) {
-    await refreshTokenCoverage(err, dispatch);
-    errorCoverage(err, [
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
+    Notify.error("Пожалуйста, повторите вход.");
   }
 }
-export const editProfile = (bodyObj: EditProfileType): AppThunk<void> => async (dispatch, getState) => {
-  try {
-    const {data} = await userService.editProfile(bodyObj);
-    let user: any = {...getState().userStore.user, ...bodyObj};
-    await dispatch(setUserData(user));
-    Notify.success("Профиль успешно изменён!");
-    console.log(data);
+// export const editProfile = (bodyObj: EditProfileType): AppThunk<void> => async (dispatch, getState) => {
+//   try {
+//     const {data} = await userService.editProfile(bodyObj);
+//     let user: any = {...getState().userStore.user, ...bodyObj};
+//     await dispatch(setUserData(user));
+//     Notify.success("Профиль успешно изменён!");
+//     console.log(data);
     
-  } catch (err) {
-    await refreshTokenCoverage(err, dispatch);
-    errorCoverage(err, [
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
-  }
-}
-export const reportPost = (postId: number, text: string): AppThunk<void> => async dispatch => {
+//   } catch (err) {
+
+//   }
+// }
+export const resolveUserStateAsync = (navigate: NavigateFunction): AppThunk<void> => async dispatch => {
   try {
-    await postService.reportPost(postId, text);
-    Notify.success("Жалоба успешно отправлена!");
-  } catch (err) {
-    await refreshTokenCoverage(err, dispatch);
-    errorCoverage(err, [
-      reportAlreadyExistAction,
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
-  }
-}
-export const unsubscribeFromUser = (userId: number): AppThunk<void> => async dispatch => {
-  try {
-    await userService.unsubscribeUser(userId);
-    dispatch(setIsFollowed(false));
-  } catch (err) {
-    await refreshTokenCoverage(err, dispatch);
-    errorCoverage(err, [
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
-  }
-}
-export const subscribeToUserSubs = (userId: number): AppThunk<void> => async dispatch => {
-  try {
-    await userService.subscribeUser(userId);
-    dispatch(setIsFollowedOnSubs(true, userId));
-  } catch (err) {
-    await refreshTokenCoverage(err, dispatch);
-    errorCoverage(err, [
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
-  }
-}
-export const unsubscribeFromUserSubs = (userId: number): AppThunk<void> => async dispatch => {
-  try {
-    await userService.unsubscribeUser(userId);
-    dispatch(setIsFollowedOnSubs(false, userId));
-  } catch (err) {
-    await refreshTokenCoverage(err, dispatch);
-    errorCoverage(err, [
-      internalErrorAction // TODO правильная обработка ошибок
-    ]);
-  }
-}
-export const loadUserAsync = (): AppThunk<void> => async dispatch => {
-  try {
-    await dispatch(getUserDataAsync());
-    return dispatch(setAppLoading(false));
-  } catch(err) {
-    if (getRefreshToken()) {
-      await dispatch(refreshTokenAsync());
+    const accessToken = getToken(TokenType.Access);
+    if (accessToken && checkExpirationDate(accessToken)) {
+      //request user and navigate to home page
       await dispatch(getUserDataAsync());
+      navigate('/home');
+      return dispatch(setAppLoading(false));
+    }
+    const twoFactorToken = getToken(TokenType.TwoFactorAuth);
+    if (twoFactorToken && checkExpirationDate(twoFactorToken)) {
+      await dispatch(setTwoFactorAuthAvailableAction(true));
+      navigate('/two-factor-auth');
       return dispatch(setAppLoading(false));
     }
     return dispatch(setAppLoading(false));
-  }
-}
-export const refreshTokenAsync = (): AppThunk<void> => async () => {
-  try {
-    const {data, status} = await userService.refreshToken();
-    if (status.toString()[0] === "2") {
-      const {accessToken, refreshToken} = data;
-      setAccessToken(accessToken);
-      setRefreshToken(refreshToken);
-    }
-  } catch (err) {
-    deleteAccessToken();
-    deleteRefreshToken();
-    errorCoverage(err, [refreshBadTokenAction, internalErrorAction]);
+  } catch(err) {
+    deleteToken(TokenType.Access);
+    deleteToken(TokenType.TwoFactorAuth);
+    return dispatch(setAppLoading(false));
   }
 }

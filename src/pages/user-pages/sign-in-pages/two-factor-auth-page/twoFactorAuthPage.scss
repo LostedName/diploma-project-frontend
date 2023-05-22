@@ -1,0 +1,35 @@
+@use '../../../../scss' as *;
+
+main.two_factor_auth_page {
+  @include base-main;
+  .two_factor_auth_form {
+    @include base-form(30rem);
+    h1 {
+      font-size: 2rem;
+      margin-bottom: .7rem;
+    }
+    span.phrase {
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      color:rgb(103 109 133);
+      letter-spacing: 0.15px; 
+    }
+    a {
+      @include link-style;
+      margin-bottom: .6rem;
+    }
+    .container:last-of-type{
+      margin-bottom: .6rem;
+    }
+    .cells_wrapper {
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+    button {
+      @include form-btn;
+      &:last-child {
+        margin-top: 1rem;
+      }
+    }
+  }
+}

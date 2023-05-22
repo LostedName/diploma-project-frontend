@@ -1,30 +1,27 @@
-import RegisterPage from "./register-page/RegisterPage";
-import LoginPage from "./login-page/LoginPage";
-import MainPage from "./main-page/MainPage";
-import PrivacyPage from "./privacy-page/PrivacyPage";
+import RegisterPage from "./sign-up-pages/register-page/RegisterPage";
+import LoginPage from "./sign-in-pages/login-page/LoginPage";
+import TwoFactorAuthPage from "./sign-in-pages/two-factor-auth-page/TwoFactorAuthPage";
+import RedirectPage from "./redirect-page/RedirectPage";
 import AboutPage from "./about-page/AboutPage";
 import TermsPage from "./terms-page/TermsPage";
-import ProfilePage from "./profile-page/ProfilePage";
-import NotFoundPage from "./notfound-page/NotFoundPage";
-import SettingsPage from "./settings-page/SettingsPage";
-import SearchPage from "./search-page/SearchPage";
-import FollowsPage from "./follows-page/FollowsPage";
-import MustLoginPage from "./mustlogin-page/MustLoginPage";
-import UserProfilePage from "./userprofile-page/UserProfilePage";
-import SubscribersPage from "./subscribers-page/SubscribersPage";
+import PrivacyPage from "./privacy-page/PrivacyPage";
+import ForgotPassPage from "./forgot-pass-page/ForgotPassPage";
+import SignUpCheckEmailPage from "./sign-up-pages/sign-up-check-email-page/SignUpCheckEmailPage";
+import SignUpConfirmedPage from "./sign-up-pages/sign-up-confirmed-page/SignUpConfirmedPage";
+import SignUpConfirmationErrorPage from "./sign-up-pages/sign-up-confirmation-error-page/SignUpConfirmationErrorPage";
+import HomePage from "./home-page/HomePage";
+
 export { 
     RegisterPage,
     LoginPage,
-    MainPage,
+    TwoFactorAuthPage,
+    RedirectPage,
     AboutPage,
-    PrivacyPage,
     TermsPage,
-    ProfilePage,
-    NotFoundPage,
-    SettingsPage,
-    SearchPage,
-    FollowsPage,
-    MustLoginPage,
-    UserProfilePage,
-    SubscribersPage,
+    PrivacyPage,
+    ForgotPassPage,
+    SignUpCheckEmailPage,
+    SignUpConfirmedPage,
+    SignUpConfirmationErrorPage,
+    HomePage,
 };

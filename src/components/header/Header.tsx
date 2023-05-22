@@ -36,19 +36,19 @@ const Header: React.FC = () => {
         {/* <SearchBar /> */}
       </div>
       {isAuth ? <div className="header_profile">
-        <img src={user?.avatar ?? "/assets/unknown_user.png"} alt="avatar" />
+        <img src={user?.avatarUrl ?? "/assets/unknown_user.png"} alt="avatar" />
         <span className="profile_name">
-          {user?.name}
+          {`${user?.firstname} ${user?.lastname}`}
         </span>
         <button onClick={openMenu} className="open_menu">
           <div />
           <div />
           <div />
           <div className={`profile_menu ${isMenuOpened ? "active" : ""}`}>
-            <Link to="/profile">Your profile</Link>
+            {/* <Link to="/profile">Your profile</Link>
             <Link to="/follows">Your follows</Link>
-            <Link to="/subscribers">Your subscribers</Link>
-            {/* <Link to="/settings">Settings</Link> */}
+            <Link to="/subscribers">Your subscribers</Link> */}
+            <Link to="/settings">Settings</Link>
           </div>
         </button>
         <button onClick={logoutHandler} className="profile_logout">
