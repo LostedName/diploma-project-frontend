@@ -3,7 +3,7 @@
 
 @mixin base-main ($style: flex) {
     width: 100%;
-    min-height: calc(100vh - 5rem - 3.75rem);
+    min-height: $content-block-height;
     background-image: url("../../public/assets/crowBackground.png");
     background-size: 50%;
     @if ($style == flex) {
@@ -61,19 +61,20 @@
     background-color: #fff;
 }
 
-@mixin form-btn{
+@mixin form-btn($color: #fff, $backgroundColor: #0a66c2){
     height: 3rem;
     border-radius: 3rem;
     border: none;
-    color: #fff;
+    color: $color;
     font-size: 1.1rem;
-    background-color: #0a66c2;
+    background-color: $backgroundColor;//#0a66c2;
     transition: all .1s ease;
+    cursor: pointer;
     &:hover{
-      background-color: #08529c;
+      background-color: darken($backgroundColor, 5);//#08529c;
     }
     &:focus-visible{
-      outline: 2px solid #3a90e6;
+      outline: 2px solid lighten($backgroundColor, 5);//#3a90e6;
     }
 }
 @mixin page-content-header {

@@ -1,46 +1,119 @@
-import React, {useEffect} from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import FloatInput from '../../../components/UI/FloatInput/FloatInput';
+import React, {useEffect, useState, useRef} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useActions } from '../../../hooks/useActions';
-import { useFieldState } from '../../../hooks/useFieldState';
-import { useValidationTimer } from '../../../hooks/useValidationTimer';
-import { isEmailValid, isFieldFilled } from '../../../services/validation';
-import { InputChangeHandler } from '../../../types/types';
-import './homePage.scss';
-import { Notify } from '../../../services/toast';
-import { validatePassword } from '../../../utils/password-validation';
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
+import Note from '../../../components/note/Note';
+import './homePage.scss';
+import Portal from '../../../components/portal/Portal';
+import EditNotePopup from '../../../components/editNotePopup/EditNotePopup';
+import { ButtonClickEvent, NoteObject } from '../../../types/types';
+import CreateNotePopup from '../../../components/createNotePopup/CreateNotePopup';
+import BounceLoader from '../../../components/bounceLoader/BounceLoader';
+import { DOTS, usePagination } from '../../../hooks/usePagination';
+import EnsureDeleteNotePopup from '../../../components/ensureDeleteNotePopup/EnsureDeleteNotePopup';
 
 const HomePage: React.FC = () => {
-  const {getUserNotesAsync} = useActions();
+  const {getUserNotesAsync, setUserNotesPageAction} = useActions();
+  const [editNotePopup, setEditNotePopup] = useState<boolean>(false);
+  const [ensureDeleteNotePopup, setEnsureDeleteNotePopup] = useState<boolean>(false);
+  const [createNotePopup, setCreateNotePopup] = useState<boolean>(false);
+  const selectedNoteId = useRef<NoteObject>({id: -1, title: "", content: "", created_at: new Date(), updated_at: new Date()});
+  const {notes, notesPage, totalNotesCount, isContentLoading} = useTypedSelector((state) => state.noteStore);
+  const paginationRange = usePagination(
+    totalNotesCount,
+    10,
+    notesPage,
+    1,
+  );
   const navigate = useNavigate();
-  const {notes} = useTypedSelector((state) => state.noteStore);
+  const createNoteBtnClick = (e: ButtonClickEvent) => {
+    e.preventDefault();
+    setCreateNotePopup(true);
+  }
+
+  const onEditBtnClick = (note: NoteObject) => {
+    setEditNotePopup(true);
+    selectedNoteId.current = note;
+  }
+  const onDeleteBtnClick = (noteId: number) => {
+    setEnsureDeleteNotePopup(true);
+    selectedNoteId.current.id = noteId;
+  }
+  const nextPage: () => void = () => {
+    if (notesPage < paginationRange[paginationRange.length - 1])
+      setUserNotesPageAction(notesPage + 1,totalNotesCount);
+  };
+  const prevPage: () => void = () => {
+    if (notesPage > 1) setUserNotesPageAction(notesPage - 1, totalNotesCount);
+  };
+  const switchPage: (page: number) => void = (page) => {
+    setUserNotesPageAction(page, totalNotesCount);
+  };
   useEffect(() => {
-    getUserNotesAsync();
-  }, []);
+    getUserNotesAsync(notesPage);
+  }, [notesPage]);
   return (
     <main className="home_page">
+      <Portal isOpened={createNotePopup}>
+        <CreateNotePopup closePopup={() => setCreateNotePopup(false)} />
+      </Portal>
+      <Portal isOpened={editNotePopup}>
+        <EditNotePopup noteId={selectedNoteId.current.id} noteTitle={selectedNoteId.current.title} noteContent={selectedNoteId.current.content} closePopup={() => setEditNotePopup(false)} />
+      </Portal>
+      <Portal isOpened={ensureDeleteNotePopup}>
+        <EnsureDeleteNotePopup noteId={selectedNoteId.current.id}  closePopup={() => setEnsureDeleteNotePopup(false)} />
+      </Portal>
         <div className='header'>
           Мои записки
         </div>
-        <div className='notes_container'>
+        <div className='content'>
           {
+            isContentLoading ? 
+            <div className='center_container'>
+              <BounceLoader/>
+            </div>
+            :
             notes.length === 0 
-            ? <div>Записок нет</div> 
-            : notes.map((note) => (
-          <div className='note' key={note.id}>
-            <div className='note_title'>
-              {note.title}
+            ? 
+          <div className='center_container'>
+            Записок нет. Вы можете добавить их используя кнопку в правом нижнем углу.
+          </div> 
+            : 
+          <div className='notes_container'>
+            <div className='notes'>
+              {notes.map((note) => (
+                <Note note={note} onDelete={() => onDeleteBtnClick(note.id)} onEdit={() => onEditBtnClick(note)} />
+                ))}
             </div>
-            <div className='note_content'>
-              {note.content}
-            </div>
-            <div className='note_created_at'>
-              Создана: {note.created_at}
+            <div className='pagination_wrapper'>
+              <img className='back_btn'
+                src="./assets/backButton.png"
+                alt="back button"
+                onClick={prevPage}
+              />
+              {paginationRange.map((pageNumber) => {
+                if (pageNumber === DOTS) {
+                  return <button className='page_number_btn'>...</button>;
+                }
+                return notesPage === pageNumber ? (
+                  <button className='page_number_btn current'>{pageNumber}</button>
+                ) : (
+                  <button className='page_number_btn' onClick={() => switchPage(pageNumber)}>
+                    {pageNumber}
+                  </button>
+                );
+              })}
+              <img className='next_btn'
+                src="./assets/backButton.png"
+                alt="next button"
+                onClick={nextPage}
+              />
             </div>
           </div>
-            ))
           }
+          <button className='add_note_btn' onClick={createNoteBtnClick}>
+            <img src="/assets/plus.png" alt="plus" />
+          </button>
         </div>
     </main>
   );

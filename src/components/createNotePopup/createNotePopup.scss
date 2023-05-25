@@ -1,0 +1,18 @@
+@use '../../scss' as *;
+
+.create_note_popup_container {
+  @include base-form(21rem);
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: .75rem;
+  }
+  .buttons {
+    @include display-flex(row, space-between, center);
+    button {
+      @include form-btn;
+      width: 5rem;
+      height: 2rem;
+    }
+  }
+}

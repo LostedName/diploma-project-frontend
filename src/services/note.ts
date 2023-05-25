@@ -2,14 +2,19 @@ import { getToken, TokenType } from './jwt';
 import api, {getAuthHeaders, resourceApi} from "./api";
 
 class NoteService {
-  async getNotesList() {
+  async getFullNotesList() {
     const accessToken = getToken(TokenType.Access);
     return await resourceApi.get("/api/user/note/list", getAuthHeaders(accessToken || ""));
+  }
+
+  async getFullNotesListWithPagination(currentPage: number) {
+    const accessToken = getToken(TokenType.Access);
+    return await resourceApi.get(`/api/user/note/list?pagination__page=${currentPage}&pagination__pageSize=10&createdAtSort__order=DESC`, getAuthHeaders(accessToken || ""));
   }
   
   async createNote(title: string, content: string) {
     const accessToken = getToken(TokenType.Access);
-    return await api.post("/api/user/note", {
+    return await resourceApi.post("/api/user/note", {
       title,
       content,
     }, getAuthHeaders(accessToken || ""));
@@ -17,10 +22,17 @@ class NoteService {
 
   async editNote(id: number, title: string, content: string) {
     const accessToken = getToken(TokenType.Access);
-    return await api.patch(`/api/user/note${id}`, {
+    return await resourceApi.patch(`/api/user/note/${id}`, {
       title,
       content,
     }, getAuthHeaders(accessToken || ""));
+  }
+
+  async deleteNote(id: number) {
+    const accessToken = getToken(TokenType.Access);
+    return await resourceApi.delete(`/api/user/note/${id}`, {
+      ...getAuthHeaders(accessToken || ""),
+    });
   }
 }
 const noteService = new NoteService();

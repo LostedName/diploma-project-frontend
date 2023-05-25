@@ -1,42 +1,114 @@
 @use '../../../scss' as *;
 
+$content-block-without-header: calc($content-block-height - 5rem);
+$notes-container-height: $content-block-without-header;
+$notes-content-height: calc($notes-container-height - 6rem);
+
+
 main.home_page {
   @include base-main;
   background: none;
-  justify-content: start;
-  align-items: start;
-  margin-bottom: 2rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width:100%;
   .header {
+    display: flex;
+    align-items: center;
     width: 100%;
     font-size: 2rem;
     padding: 1rem;
+    padding-left: 1.5rem;
+    height: 5rem;
     border-bottom: .1rem solid rgba(0, 0, 0, 0.329);
   }
-  .notes_container {
-    width: 100%;
-    height: 100%;
+  .content {
     display: flex;
-    flex-wrap: wrap;    
-  }
-  .note {
-    @include base-form(25rem);
-    padding: 0;
-    margin-top: 2rem;
-    margin-left: 2rem;
-    .note_title {
+    position: relative;
+    width: 100%;
+    min-height: $content-block-without-header;
+    .notes_container {
+      display: flex;
+      flex-direction: column;
+      min-height: $content-block-without-header;
       width: 100%;
-      padding: 1rem;
-      border-bottom: .1rem solid rgba(0, 0, 0, 0.125);
+      justify-content: space-between;
+      .notes {
+        display: flex;
+        flex-wrap: wrap;    
+        width: 100%;
+      }
+      .pagination_wrapper {
+        width: 100%;
+        height: 6rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 2rem;
+        img {
+          cursor: pointer;
+          width: 2rem;
+          height: 2rem;
+          border: none;
+          opacity: 0.5;
+          &:hover {
+            opacity: 0.9;
+          }
+        }
+        img.back_btn {
+          margin-right: 1rem;
+        }
+        img.next_btn {
+          margin-right: 0;
+          transform: scaleX(-1);
+          margin-left: 1rem;
+        }
+        button.page_number_btn {
+          color: #05828e;
+          opacity: 0.5;
+          font-size: 1.5rem;
+          font-weight: bold;
+          border: none;
+          outline: none;
+          background-color: transparent;
+          cursor: pointer;
+          margin-right: 1rem;
+          &:last-of-type {
+            margin-right: 0;
+          }
+          &:hover {
+            opacity: 0.9;
+          }
+          &.current {
+            opacity: 1;
+          }
+        }
+      }
     }
-    .note_content {
+    .center_container {
       width: 100%;
-      padding: 1rem;
-      border-bottom: .1rem solid rgba(0, 0, 0, 0.125);
+      min-height: $content-block-without-header;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
     }
-    .note_created_at {
-      width: 100%;
-      padding: 1rem;
-      border-bottom: .1rem solid rgba(0, 0, 0, 0.125);
+    .add_note_btn {
+      @include form-btn(#fff, #2065ce);
+      position: fixed;
+      height: 4.5rem;
+      width: 4.5rem;
+      border-radius: 1rem;
+      right: 3rem;
+      bottom: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: .1rem solid #9b9b9b59;
+      cursor: pointer;
+      img {
+        width:2rem;
+        height:2rem;
+      }
     }
   }
 }

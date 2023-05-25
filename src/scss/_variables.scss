@@ -1,3 +1,4 @@
 @use 'colors' as *;
 
 $border: 1px solid $border-color;
+$content-block-height: calc(100vh - 5rem - 3.75rem);
