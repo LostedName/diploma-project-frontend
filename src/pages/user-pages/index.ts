@@ -10,6 +10,7 @@ import SignUpCheckEmailPage from "./sign-up-pages/sign-up-check-email-page/SignU
 import SignUpConfirmedPage from "./sign-up-pages/sign-up-confirmed-page/SignUpConfirmedPage";
 import SignUpConfirmationErrorPage from "./sign-up-pages/sign-up-confirmation-error-page/SignUpConfirmationErrorPage";
 import HomePage from "./home-page/HomePage";
+import SettingsPage from "./settings-page/SettingsPage";
 
 export { 
     RegisterPage,
@@ -24,4 +25,5 @@ export {
     SignUpConfirmedPage,
     SignUpConfirmationErrorPage,
     HomePage,
+    SettingsPage,
 };

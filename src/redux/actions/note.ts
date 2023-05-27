@@ -1,15 +1,15 @@
 import { Notify } from '../../services/toast';
 import { AppThunk } from '../store';
 import { NoteActionTypes } from '../../types/Note';
-import { NoteObject } from '../../types/types';
+import { NOTES_ON_PAGE, NoteItem } from '../../types/types';
 import { noteService } from '../../services/note';
 
-export const addNoteAction = (payload: NoteObject) => ({
+export const addNoteAction = (payload: NoteItem) => ({
   type: NoteActionTypes.ADD_NEW_NOTE,
   payload,
 });
 
-export const setNotesAction = (payload: NoteObject[]) => ({
+export const setNotesAction = (payload: NoteItem[]) => ({
   type: NoteActionTypes.SET_USER_NOTES,
   payload, 
 });
@@ -30,7 +30,7 @@ export const setContentIsLoadingAction = (payload: boolean) => ({
   payload,
 });
 
-export const updateUserNoteAction = (payload: NoteObject) => ({
+export const updateUserNoteAction = (payload: NoteItem) => ({
   type: NoteActionTypes.UPDATE_USER_NOTE,
   payload, 
 });
@@ -43,7 +43,7 @@ export const getUserNotesAsync = (page: number): AppThunk<void> => async dispatc
         items,
         total,
       } = data;
-      const userNotes: NoteObject[] = items;
+      const userNotes: NoteItem[] = items;
       dispatch(setNotesAction(userNotes));
       dispatch(setUserNotesPageAction(page, total));
       dispatch(setContentIsLoadingAction(false));
@@ -86,7 +86,7 @@ export const deleteUserNoteAsync = (id: number, callback: () => void): AppThunk<
       const {noteStore} = getState();
       let currentPage = noteStore.notesPage;
       const totalItems = noteStore.totalNotesCount - 1;
-      const totalPagesCount = Math.ceil(totalItems / 10);
+      const totalPagesCount = Math.ceil(totalItems / NOTES_ON_PAGE);
       if (currentPage > totalPagesCount) {
         currentPage = totalPagesCount;
       } 

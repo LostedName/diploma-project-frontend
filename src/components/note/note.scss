@@ -19,6 +19,8 @@
         & > .buttons {
           display: flex;
           justify-content: flex-end;
+          align-items: flex-start;
+          
           button {
             background: none;
             border: none;

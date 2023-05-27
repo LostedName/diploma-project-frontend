@@ -9,6 +9,7 @@ export enum UserActionTypes {
     SET_RESET_PASSWORD_ERROR="SET_RESET_PASSWORD_ERROR",
 
     SET_USER_DATA="SET_USER_DATA",
+    UPDATE_PROFILE_DATA="UPDATE_PROFILE_DATA",
     LOGOUT_USER="LOGOUT_USER",
     SET_APP_LOADING="SET_APP_LOADING",
     SET_USER_ERROR="SET_USER_ERROR"
@@ -59,6 +60,11 @@ export interface SetUserDataAction {
     payload: UserType;
 }
 
+export interface UpdateProfileDataAction {
+    type: UserActionTypes.UPDATE_PROFILE_DATA;
+    payload: UpdateProfileDto;
+}
+
 export interface LogoutUserAction {
     type: UserActionTypes.LOGOUT_USER;
 }
@@ -81,6 +87,7 @@ export type UserAction = SetResetPasswordErrorAction |
                         SetSignUpConfirmationErrorAvailableAction |
                         SetTwoFactorAuthAvailableAvailableAction |
                         SetUserDataAction |
+                        UpdateProfileDataAction |
                         LogoutUserAction | 
                         AppLoadingAction | 
                         SetUserErrorAction;
@@ -93,6 +100,8 @@ export interface UserType {
     lastname: string,
     createdAt: string,
 }
+
+export interface UpdateProfileDto {firstName: string, lastName: string, avatarUrl: string}
 
 export interface EditProfileType {
     firstname: string,
@@ -110,7 +119,7 @@ export interface UserStates {
     isSignUpConfirmedAvailable: boolean;
     isSignUpConfirmationErrorAvailable: boolean;
     isTwoFactorAuthAvailable: boolean;
-    isVerifySignUpAvailable: boolean; //???
+    isVerifySignUpAvailable: boolean;
 }
 
 export interface UserState {

@@ -1,9 +1,9 @@
 import React from 'react';
-import { ButtonClickEvent, NoteObject } from '../../types/types';
+import { ButtonClickEvent, NoteItem } from '../../types/types';
 import "./note.scss";
 
 interface NoteComponent {
-  note: NoteObject;
+  note: NoteItem;
   onEdit: () => void;
   onDelete: () => void;
 }

@@ -20,6 +20,7 @@ function UserApp() {
   const {isAuth, isAppLoading, user} = useTypedSelector((state) => state.userStore);
   const {resolveUserStateAsync} = useActions();
   const navigate = useNavigate();
+  console.log(isAuth);
   useEffect(() => {
     resolveUserStateAsync(navigate);
   }, []);

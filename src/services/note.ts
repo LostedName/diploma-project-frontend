@@ -1,5 +1,6 @@
 import { getToken, TokenType } from './jwt';
 import api, {getAuthHeaders, resourceApi} from "./api";
+import { NOTES_ON_PAGE } from '../types/types';
 
 class NoteService {
   async getFullNotesList() {
@@ -9,7 +10,7 @@ class NoteService {
 
   async getFullNotesListWithPagination(currentPage: number) {
     const accessToken = getToken(TokenType.Access);
-    return await resourceApi.get(`/api/user/note/list?pagination__page=${currentPage}&pagination__pageSize=10&createdAtSort__order=DESC`, getAuthHeaders(accessToken || ""));
+    return await resourceApi.get(`/api/user/note/list?pagination__page=${currentPage}&pagination__pageSize=${NOTES_ON_PAGE}&createdAtSort__order=DESC`, getAuthHeaders(accessToken || ""));
   }
   
   async createNote(title: string, content: string) {

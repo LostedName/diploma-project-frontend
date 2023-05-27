@@ -4,6 +4,7 @@ import { useActions } from "../../hooks/useActions";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { SearchBar } from "../UI";
 import './header.scss';
+import { DEFAULT_IMAGE } from "../../types/types";
 
 const Header: React.FC = () => {
   const isAuth = useTypedSelector((state) => state.userStore.isAuth);
@@ -20,6 +21,12 @@ const Header: React.FC = () => {
     setIsMenuOpened(true);
   };
   const closeMenu = () => {setIsMenuOpened(false);};
+  const imageOnErrorHandler = (
+    event: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    event.currentTarget.src = DEFAULT_IMAGE;
+    event.currentTarget.className = "error";
+  };
   useEffect(() => {
     document.addEventListener('click', closeMenu);
     return () => {
@@ -36,28 +43,20 @@ const Header: React.FC = () => {
         {/* <SearchBar /> */}
       </div>
       {isAuth ? <div className="header_profile">
-        <img src={user?.avatarUrl ?? "/assets/unknown_user.png"} alt="avatar" />
+        <img src={user?.avatarUrl ?? DEFAULT_IMAGE} alt="avatar" onError={imageOnErrorHandler} />
         <span className="profile_name">
           {`${user?.firstname} ${user?.lastname}`}
         </span>
-        <button onClick={openMenu} className="open_menu">
-          <div />
-          <div />
-          <div />
-          <div className={`profile_menu ${isMenuOpened ? "active" : ""}`}>
-            {/* <Link to="/profile">Your profile</Link>
-            <Link to="/follows">Your follows</Link>
-            <Link to="/subscribers">Your subscribers</Link> */}
-            <Link to="/settings">Settings</Link>
-          </div>
-        </button>
+        <Link to="/settings" className="open_menu">
+          <img src="/assets/cog.png"alt="settings"/>
+        </Link>
         <button onClick={logoutHandler} className="profile_logout">
-          Sign out
+          Выход
         </button>
       </div>
       : <div>
-        <Link to="/login" className="btn login_btn">Log In</Link>
-        <Link to="/registration" className="btn register_btn">Register</Link>
+        <Link to="/login" className="btn login_btn">Войти</Link>
+        <Link to="/registration" className="btn register_btn">Зарегистрироваться</Link>
       </div>
       }
     </header>

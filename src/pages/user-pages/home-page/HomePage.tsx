@@ -6,7 +6,7 @@ import Note from '../../../components/note/Note';
 import './homePage.scss';
 import Portal from '../../../components/portal/Portal';
 import EditNotePopup from '../../../components/editNotePopup/EditNotePopup';
-import { ButtonClickEvent, NoteObject } from '../../../types/types';
+import { ButtonClickEvent, NOTES_ON_PAGE, NoteItem } from '../../../types/types';
 import CreateNotePopup from '../../../components/createNotePopup/CreateNotePopup';
 import BounceLoader from '../../../components/bounceLoader/BounceLoader';
 import { DOTS, usePagination } from '../../../hooks/usePagination';
@@ -17,11 +17,11 @@ const HomePage: React.FC = () => {
   const [editNotePopup, setEditNotePopup] = useState<boolean>(false);
   const [ensureDeleteNotePopup, setEnsureDeleteNotePopup] = useState<boolean>(false);
   const [createNotePopup, setCreateNotePopup] = useState<boolean>(false);
-  const selectedNoteId = useRef<NoteObject>({id: -1, title: "", content: "", created_at: new Date(), updated_at: new Date()});
+  const selectedNoteId = useRef<NoteItem>({id: -1, title: "", content: "", created_at: new Date(), updated_at: new Date()});
   const {notes, notesPage, totalNotesCount, isContentLoading} = useTypedSelector((state) => state.noteStore);
   const paginationRange = usePagination(
     totalNotesCount,
-    10,
+    NOTES_ON_PAGE,
     notesPage,
     1,
   );
@@ -31,7 +31,7 @@ const HomePage: React.FC = () => {
     setCreateNotePopup(true);
   }
 
-  const onEditBtnClick = (note: NoteObject) => {
+  const onEditBtnClick = (note: NoteItem) => {
     setEditNotePopup(true);
     selectedNoteId.current = note;
   }

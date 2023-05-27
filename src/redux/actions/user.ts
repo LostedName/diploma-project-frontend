@@ -4,7 +4,7 @@ import { NavigateFunction } from 'react-router-dom';
 import { Notify } from '../../services/toast';
 import { userService } from '../../services/user';
 import { AppThunk } from '../store';
-import { EditProfileType, UserActionTypes, UserType } from './../../types/User';
+import { EditProfileType, UserActionTypes, UserType, UpdateProfileDto } from './../../types/User';
 
 export const setUserAuthorization = (payload: boolean) => ({
   type: UserActionTypes.SET_AUTHORIZATION,
@@ -32,6 +32,10 @@ export const setTwoFactorAuthAvailableAction = (payload: boolean) => ({
 
 export const setUserData = (payload: UserType) => ({
   type: UserActionTypes.SET_USER_DATA,
+  payload, 
+});
+export const updateProfileData = (payload: UpdateProfileDto) => ({
+  type: UserActionTypes.UPDATE_PROFILE_DATA,
   payload, 
 });
 export const setUserError = (payload: string) => ({
@@ -180,25 +184,25 @@ export const getUserDataAsync = (): AppThunk<void> => async dispatch => {
     Notify.error("Пожалуйста, повторите вход.");
   }
 }
-// export const editProfile = (bodyObj: EditProfileType): AppThunk<void> => async (dispatch, getState) => {
-//   try {
-//     const {data} = await userService.editProfile(bodyObj);
-//     let user: any = {...getState().userStore.user, ...bodyObj};
-//     await dispatch(setUserData(user));
-//     Notify.success("Профиль успешно изменён!");
-//     console.log(data);
-    
-//   } catch (err) {
 
-//   }
-// }
+export const editProfileAsync = (firstName: string, lastName: string, avatarUrl: string): AppThunk<void> => async (dispatch, getState) => {
+  try {
+    const {data, status} = await userService.editUserProfile(firstName, lastName, avatarUrl);
+    if (status.toString()[0] === "2") {
+      Notify.success('Профиль успешно обновлён.');
+      dispatch(updateProfileData({firstName, lastName, avatarUrl}));
+    }
+  } catch (err) {
+    Notify.error("Пожалуйста, повторите вход.");
+  }
+}
+
 export const resolveUserStateAsync = (navigate: NavigateFunction): AppThunk<void> => async dispatch => {
   try {
     const accessToken = getToken(TokenType.Access);
     if (accessToken && checkExpirationDate(accessToken)) {
       //request user and navigate to home page
       await dispatch(getUserDataAsync());
-      navigate('/home');
       return dispatch(setAppLoading(false));
     }
     const twoFactorToken = getToken(TokenType.TwoFactorAuth);

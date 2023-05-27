@@ -1,0 +1,19 @@
+@use '../../../../../scss' as *;
+
+#settings_applications_page {
+    width: 100%;
+    & > .header {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      font-size: 2rem;
+      padding: 1rem;
+      padding-left: 1.5rem;
+      height: 5rem;
+      border-bottom: .1rem solid rgb(223, 223, 223);
+    }
+    
+    & > .content {
+      
+    }
+}

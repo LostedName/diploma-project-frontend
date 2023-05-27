@@ -1,6 +1,7 @@
 import { TokenType } from './../../services/jwt';
 import { deleteToken } from "../../services/jwt";
 import { UserAction, UserActionTypes, UserState } from "../../types/User";
+import { isNil } from 'lodash';
  
 const initialState: UserState = {
   isAppLoading: true,
@@ -39,11 +40,19 @@ const userReducer = (state = initialState, action: UserAction): UserState => {
                 isAuth: true,
                 user: { ...action.payload },
             };
+        case UserActionTypes.UPDATE_PROFILE_DATA:
+            if (isNil(state.user)) {
+                return state;
+            }
+            state.user.firstname = action.payload.firstName;
+            state.user.lastname = action.payload.lastName;
+            state.user.avatarUrl = action.payload.avatarUrl;
+            return { ...state };
 
         case UserActionTypes.LOGOUT_USER:
             deleteToken(TokenType.Access);
             deleteToken(TokenType.Refresh);
-            return { ...initialState };
+            return { ...initialState, isAppLoading: false };
         case UserActionTypes.SET_APP_LOADING:
             return {...state, isAppLoading: action.payload};
         default:

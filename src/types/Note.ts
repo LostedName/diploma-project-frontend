@@ -1,4 +1,4 @@
-import { NoteObject } from "./types";
+import { NoteItem } from "./types";
 
 export enum NoteActionTypes {
     ADD_NEW_NOTE="ADD_NEW_NOTE",
@@ -10,12 +10,12 @@ export enum NoteActionTypes {
 
 export interface AddNewNoteAction {
     type: NoteActionTypes.ADD_NEW_NOTE;
-    payload: NoteObject;
+    payload: NoteItem;
 }
 
 export interface SetUserNotesAction {
     type: NoteActionTypes.SET_USER_NOTES;
-    payload: NoteObject[];
+    payload: NoteItem[];
 }
 export interface SetUserNotesPageAction {
     type: NoteActionTypes.SET_NOTES_PAGE;
@@ -26,7 +26,7 @@ export interface SetUserNotesPageAction {
 }
 export interface UpdateUserNotesPageAction {
     type: NoteActionTypes.UPDATE_USER_NOTE;
-    payload: NoteObject;
+    payload: NoteItem;
 }
 export interface SetIsContentLoadingAction {
     type: NoteActionTypes.SET_IS_CONTENT_LOADING;
@@ -36,7 +36,7 @@ export interface SetIsContentLoadingAction {
 export type NoteAction = AddNewNoteAction | SetUserNotesAction | SetUserNotesPageAction | UpdateUserNotesPageAction | SetIsContentLoadingAction;
 
 export interface NoteState {
-    notes: NoteObject[];
+    notes: NoteItem[];
     notesPage: number;
     totalNotesCount: number;
     isContentLoading: boolean;

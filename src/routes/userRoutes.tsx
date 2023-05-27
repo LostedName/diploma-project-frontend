@@ -1,4 +1,4 @@
-import { AboutPage, ForgotPassPage, HomePage, LoginPage, PrivacyPage, RedirectPage, RegisterPage, SignUpCheckEmailPage, SignUpConfirmationErrorPage, SignUpConfirmedPage, TermsPage, TwoFactorAuthPage } from "../pages/user-pages";
+import { AboutPage, ForgotPassPage, HomePage, LoginPage, PrivacyPage, RedirectPage, RegisterPage, SettingsPage, SignUpCheckEmailPage, SignUpConfirmationErrorPage, SignUpConfirmedPage, TermsPage, TwoFactorAuthPage } from "../pages/user-pages";
 import SignUpConfirmPage from "../pages/user-pages/sign-up-pages/sign-up-confirm-page/SignUpConfirmPage";
 import { ElementRoutes } from "../types/routes";
 
@@ -56,12 +56,8 @@ const loggedRoutes: ElementRoutes = [
         element: HomePage, 
     },
     {
-        path:"/profile",
-        element: HomePage, 
-    },
-    {
-        path:"/settings",
-        element: HomePage, 
+        path:"/settings/*",
+        element: SettingsPage, 
     },
     {
         path:"/*",

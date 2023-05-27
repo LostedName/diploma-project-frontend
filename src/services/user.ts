@@ -46,9 +46,31 @@ class UserService {
     return await resourceApi.get("/api/user", getAuthHeaders(accessToken || ""));
   }
   
-  // async editProfile(bodyObj: EditProfileType) {
-  //   return await api.put("api/user/", bodyObj, getAuthHeaders());
-  // }
+  async editUserProfile(firstName: string, lastName: string, avatarUrl: string) {
+    const accessToken = getToken(TokenType.Access);
+    return await resourceApi.patch("api/user/", { firstName, lastName, avatarUrl}, getAuthHeaders(accessToken || ""));
+  }
+
+  async changeUserPassword(oldPassword: string, newPassword: string) {
+    const accessToken = getToken(TokenType.Access);
+    return await resourceApi.patch("api/user/password", { oldPassword, newPassword }, getAuthHeaders(accessToken || ""));
+  }
+
+  async sendResetPasswordLink(email: string) {
+    return await api.post("api/user/auth/send/change-password-link", { email });
+  }
+
+  async resendResetPasswordLink(email: string) {
+    return await api.post("api/user/auth/resend/change-password-link", { email });
+  }
+
+  async resetPassword(password: string, repeatPassword: string, token: string) {
+    return await api.post("api/user/auth/reset-password", { password, repeatPassword, token }, getAuthHeaders(token || ""));
+  }
+
+  async verifyToken(token: string) {
+    return await api.get("", getAuthHeaders(token || ""));
+  }
 }
 const userService = new UserService();
 export {userService};
